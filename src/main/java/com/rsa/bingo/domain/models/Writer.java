@@ -1,15 +1,7 @@
 package com.rsa.bingo.domain.models;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.IOException;
 
@@ -20,8 +12,10 @@ public final class Writer {
     public static byte[] write(Card card, Colors colors) throws IOException {
         try (var workbook = new HSSFWorkbook()) {
             var sheet = getSheet(workbook);
-            var primaryCellStyle = getPrimaryCellStyle(workbook);
-            var secondaryCellStyle = getSecondaryCellStyle(workbook);
+            var primaryColor = getColor(colors.getPrimaryColor());
+            var secondaryColor = getColor(colors.getSecondaryColor());
+            var primaryCellStyle = getPrimaryCellStyle(workbook, primaryColor);
+            var secondaryCellStyle = getSecondaryCellStyle(workbook, primaryColor, secondaryColor);
             fillSheet(sheet, card, primaryCellStyle, secondaryCellStyle);
             return workbook.getBytes();
         }
@@ -34,17 +28,14 @@ public final class Writer {
         return sheet;
     }
 
-    private static Font getFont(Workbook workbook) {
-        var font = workbook.createFont();
-        font.setColor(IndexedColors.GREEN.index);
-        font.setFontHeightInPoints((short) 28);
-        return font;
+    private static short getColor(String color) {
+        return IndexedColors.fromInt(Integer.parseInt(color)).index;
     }
 
-    private static CellStyle getPrimaryCellStyle(Workbook workbook) {
-        var font = getFont(workbook);
+    private static CellStyle getPrimaryCellStyle(Workbook workbook, short primaryColor) {
+        var font = getFont(workbook, primaryColor);
         var cellStyle = workbook.createCellStyle();
-        setDefaultStyle(cellStyle);
+        setDefaultStyle(cellStyle, primaryColor);
         cellStyle.setFont(font);
         cellStyle.setFillForegroundColor(IndexedColors.WHITE.index);
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -52,23 +43,30 @@ public final class Writer {
         return cellStyle;
     }
 
-    private static CellStyle getSecondaryCellStyle(Workbook workbook) {
+    private static Font getFont(Workbook workbook, short color) {
+        var font = workbook.createFont();
+        font.setColor(color);
+        font.setFontHeightInPoints((short) 28);
+        return font;
+    }
+
+    private static CellStyle getSecondaryCellStyle(Workbook workbook, short primaryColor, short secondaryColor) {
         var cellStyle = workbook.createCellStyle();
-        setDefaultStyle(cellStyle);
-        cellStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.index);
+        setDefaultStyle(cellStyle, primaryColor);
+        cellStyle.setFillForegroundColor(secondaryColor);
         return cellStyle;
     }
 
-    private static void setDefaultStyle(CellStyle cellStyle) {
+    private static void setDefaultStyle(CellStyle cellStyle, short color) {
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        cellStyle.setBorderLeft(BorderStyle.THIN);
-        cellStyle.setBorderTop(BorderStyle.THIN);
-        cellStyle.setBorderRight(BorderStyle.THIN);
-        cellStyle.setBorderBottom(BorderStyle.THIN);
-        cellStyle.setLeftBorderColor(IndexedColors.GREEN.index);
-        cellStyle.setTopBorderColor(IndexedColors.GREEN.index);
-        cellStyle.setRightBorderColor(IndexedColors.GREEN.index);
-        cellStyle.setBottomBorderColor(IndexedColors.GREEN.index);
+        cellStyle.setBorderLeft(BorderStyle.MEDIUM);
+        cellStyle.setBorderTop(BorderStyle.MEDIUM);
+        cellStyle.setBorderRight(BorderStyle.MEDIUM);
+        cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+        cellStyle.setLeftBorderColor(color);
+        cellStyle.setTopBorderColor(color);
+        cellStyle.setRightBorderColor(color);
+        cellStyle.setBottomBorderColor(color);
     }
 
     private static void fillSheet(Sheet sheet, Card card, CellStyle primaryCellStyle, CellStyle secondaryCellStyle) {
@@ -79,9 +77,7 @@ public final class Writer {
                 card.get(i, j).ifPresentOrElse(value -> {
                     column.setCellValue(value);
                     column.setCellStyle(primaryCellStyle);
-                }, () -> {
-                    column.setCellStyle(secondaryCellStyle);
-                });
+                }, () -> column.setCellStyle(secondaryCellStyle));
             }
         }
     }

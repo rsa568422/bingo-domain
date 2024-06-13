@@ -10,7 +10,7 @@ public interface CardRepository {
 
     Optional<Card> findById(Integer id);
 
-    Iterable<Card> findByUserId(Integer id);
+    Iterable<Card> findByPlayerId(Integer playerId);
 
     Card save(Card card);
 

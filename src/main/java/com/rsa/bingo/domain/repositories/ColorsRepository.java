@@ -8,9 +8,9 @@ public interface ColorsRepository {
 
     Optional<Colors> findById(Integer id);
 
-    Iterable<Colors> findByCardId(Integer userId);
+    Iterable<Colors> findByCardId(Integer cardId);
 
-    Iterable<Colors> findByUserId(Integer userId);
+    Iterable<Colors> findByPlayerId(Integer playerId);
 
     Colors save(Colors colors);
 

@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 
+@Getter
 public final class Card {
 
     static final int ROWS = 3;
@@ -23,7 +24,6 @@ public final class Card {
             "El orden de los elementos es incorrecto en la %s %d";
     private static final String ERROR_ELEMENT_ORDER = "Orden de los elementos incorrecto";
 
-    @Getter
     @Setter
     private Integer id;
 
@@ -47,6 +47,11 @@ public final class Card {
         if (badOrder(values))
             throw new VerifyError(ERROR_ELEMENT_ORDER);
         this.values = values;
+    }
+
+    public Card(Integer id, Integer[][] values) {
+        this(values);
+        this.id = id;
     }
 
     public Optional<Integer> get(int x, int y) {

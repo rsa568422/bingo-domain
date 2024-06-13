@@ -17,7 +17,10 @@ class CardTest {
 
     @Test
     void card_ok() {
-        assertDoesNotThrow(Data::CARD);
+        assertAll(
+                () -> assertDoesNotThrow(Data::CARD),
+                () -> assertDoesNotThrow(() -> new Card(1, Data.VALUES()))
+        );
     }
 
     @Test

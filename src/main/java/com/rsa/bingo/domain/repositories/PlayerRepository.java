@@ -11,4 +11,8 @@ public interface PlayerRepository {
     Optional<Player> findById(Integer id);
 
     Optional<Player> findByName(String name);
+
+    Player save(Player player);
+
+    void delete(Integer id);
 }

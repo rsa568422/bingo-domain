@@ -11,4 +11,8 @@ public interface CardRepository {
     Optional<Card> findById(Integer id);
 
     Iterable<Card> findByUserId(Integer id);
+
+    Card save(Card card);
+
+    void delete(Integer id);
 }

@@ -1,19 +1,27 @@
 package com.rsa.bingo.domain.models;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.IOException;
 
-public final class Writer {
+public final class Parser {
 
-    private Writer() { }
+    private Parser() { }
 
-    public static byte[] write(Card card, Colors colors) throws IOException {
+    public static byte[] getBytes(Card card, Colors colors) throws IOException {
         try (var workbook = new HSSFWorkbook()) {
             var sheet = getSheet(workbook);
-            var primaryColor = getColor(colors.getPrimaryColor());
-            var secondaryColor = getColor(colors.getSecondaryColor());
+            var primaryColor = getColor(workbook, colors.getPrimaryRGB());
+            var secondaryColor = getColor(workbook, colors.getSecondaryRGB());
             var primaryCellStyle = getPrimaryCellStyle(workbook, primaryColor);
             var secondaryCellStyle = getSecondaryCellStyle(workbook, primaryColor, secondaryColor);
             fillSheet(sheet, card, primaryCellStyle, secondaryCellStyle);
@@ -28,8 +36,9 @@ public final class Writer {
         return sheet;
     }
 
-    private static short getColor(String color) {
-        return IndexedColors.fromInt(Integer.parseInt(color)).index;
+    private static short getColor(HSSFWorkbook workbook, int[] rgb) {
+        var palette = workbook.getCustomPalette();
+        return palette.findSimilarColor(rgb[0], rgb[1], rgb[2]).getIndex();
     }
 
     private static CellStyle getPrimaryCellStyle(Workbook workbook, short primaryColor) {

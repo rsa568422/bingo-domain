@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public final class Card {
 
-    protected static final int ROWS = 3;
-    protected static final int COLUMNS = 9;
+    static final int ROWS = 3;
+    static final int COLUMNS = 9;
     private static final int ELEMENTS = 5;
     private static final String ROW = "fila";
     private static final String COLUMN = "columna";

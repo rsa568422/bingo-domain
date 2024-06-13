@@ -4,10 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.rsa</groupId>
+    <artifactId>bingo-domain</artifactId>
+    <version>0.0.1</version>
+
     <properties>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.26</lombok.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -16,10 +20,6 @@
         <mockito-junit-jupiter.version>5.2.0</mockito-junit-jupiter.version>
         <poi.version>5.2.5</poi.version>
     </properties>
-
-    <groupId>com.rsa</groupId>
-    <artifactId>bingo-domain</artifactId>
-    <version>0.0.1</version>
 
     <dependencies>
         <dependency>

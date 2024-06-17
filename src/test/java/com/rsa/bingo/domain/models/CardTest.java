@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -129,6 +130,8 @@ class CardTest {
         var card = Data.CARD();
 
         assertAll(
+                () -> assertArrayEquals(Data.VALUES(), card.getValues()),
+
                 () -> assertFalse(card.get(0, 0).isPresent()),
                 () -> assertTrue(card.get(0, 1).isPresent()),
                 () -> assertEquals(18, card.get(0, 1).orElse(null)),

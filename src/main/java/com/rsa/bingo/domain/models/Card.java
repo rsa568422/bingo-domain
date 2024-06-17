@@ -12,17 +12,8 @@ import java.util.Optional;
 @Getter
 public final class Card {
 
-    static final int ROWS = 3;
-    static final int COLUMNS = 9;
-    private static final int ELEMENTS = 5;
-    private static final String ROW = "fila";
-    private static final String COLUMN = "columna";
-    private static final String ERROR_ROWS_NUMBER = "Número de filas incorrecto";
-    private static final String ERROR_ELEMENTS_NUMBER_TEMPLATE =
-            "Número de elementos incorrecto en la %s %d";
-    private static final String ERROR_ELEMENTS_ORDER_TEMPLATE =
-            "El orden de los elementos es incorrecto en la %s %d";
-    private static final String ERROR_ELEMENT_ORDER = "Orden de los elementos incorrecto";
+    public static final int ROWS = 3;
+    public static final int COLUMNS = 9;
 
     @Setter
     private Integer id;
@@ -108,4 +99,14 @@ public final class Card {
                 .orElseThrow(() -> new VerifyError(ERROR_ELEMENT_ORDER));
         return Pair.of(min, max);
     }
+
+    private static final int ELEMENTS = 5;
+    private static final String ROW = "fila";
+    private static final String COLUMN = "columna";
+    private static final String ERROR_ROWS_NUMBER = "Número de filas incorrecto";
+    private static final String ERROR_ELEMENTS_NUMBER_TEMPLATE =
+            "Número de elementos incorrecto en la %s %d";
+    private static final String ERROR_ELEMENTS_ORDER_TEMPLATE =
+            "El orden de los elementos es incorrecto en la %s %d";
+    private static final String ERROR_ELEMENT_ORDER = "Orden de los elementos incorrecto";
 }

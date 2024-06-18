@@ -18,6 +18,9 @@ public final class Card {
     @Setter
     private Integer id;
 
+    @Setter
+    private Player player;
+
     private final Integer[][] values;
 
     public Card(Integer[][] values) {
@@ -43,6 +46,11 @@ public final class Card {
     public Card(Integer id, Integer[][] values) {
         this(values);
         this.id = id;
+    }
+
+    public Card(Integer id, Integer[][] values, Player player) {
+        this(id, values);
+        this.player = player;
     }
 
     public Optional<Integer> get(int x, int y) {

@@ -13,6 +13,9 @@ public final class Colors {
     @Setter
     private Integer id;
 
+    @Setter
+    private Card card;
+
     private final String primaryColor;
 
     private final String secondaryColor;
@@ -31,6 +34,11 @@ public final class Colors {
     public Colors(Integer id, String primaryColor, String secondaryColor) {
         this(primaryColor, secondaryColor);
         this.id = id;
+    }
+
+    public Colors(Integer id, String primaryColor, String secondaryColor, Card card) {
+        this(id, primaryColor, secondaryColor);
+        this.card = card;
     }
 
     public int[] getPrimaryRGB() {

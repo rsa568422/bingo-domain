@@ -27,14 +27,14 @@ final class XlsUtils {
     }
 
     static HSSFCellStyle getPrimaryCellStyle(HSSFWorkbook workbook, Colors colors, int height) {
-        return getPrimaryCellStyle(workbook, getColor(workbook, colors.getPrimaryRGB()), height);
+        return getPrimaryCellStyle(workbook, getColor(workbook, colors.getPrimary()), height);
     }
 
     static HSSFCellStyle getSecondaryCellStyle(HSSFWorkbook workbook, Colors colors) {
         return getSecondaryCellStyle(
                 workbook,
-                getColor(workbook, colors.getPrimaryRGB()),
-                getColor(workbook, colors.getSecondaryRGB())
+                getColor(workbook, colors.getPrimary()),
+                getColor(workbook, colors.getSecondary())
         );
     }
 
@@ -64,7 +64,7 @@ final class XlsUtils {
     private static HSSFFont getFont(HSSFWorkbook workbook, short color, int height) {
         var font = workbook.createFont();
         font.setColor(color);
-        font.setFontHeightInPoints(Integer.valueOf(height).shortValue());
+        font.setFontHeightInPoints((short) height);
         return font;
     }
 

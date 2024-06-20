@@ -11,9 +11,9 @@ import lombok.Setter;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public final class Player {
+public final class Customization {
 
-    private Integer id;
+    private Card card;
 
-    private String name;
+    private Colors colors;
 }

@@ -1,54 +1,75 @@
 package com.rsa.bingo.domain.models;
 
 import lombok.Getter;
-import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.regex.Pattern;
+import java.util.Arrays;
 
 @Getter
 public final class Colors {
 
     private static final String RGB_PATTERN = "^rgb\\(\\d{1,3},\\d{1,3},\\d{1,3}\\)$";
 
-    @Setter
     private Integer id;
 
-    private final String primaryColor;
+    private final int[] primary;
 
-    private final String secondaryColor;
+    private final int[] secondary;
 
-    public Colors(String primaryColor, String secondaryColor) {
-        if (isBadColorString(primaryColor)) {
+    public Colors(int[] primary, int[] secondary) {
+        if (isInvalidColor(primary)) {
             throw new VerifyError("Error en el formato del color principal");
         }
-        if (isBadColorString(secondaryColor)) {
+        if (isInvalidColor(secondary)) {
             throw new VerifyError("Error en el formato del color secundario");
         }
-        this.primaryColor = primaryColor;
-        this.secondaryColor = secondaryColor;
+        this.primary = primary;
+        this.secondary = secondary;
     }
 
-    public Colors(Integer id, String primaryColor, String secondaryColor) {
+    public Colors(Integer id, int[] primaryColor, int[] secondaryColor) {
         this(primaryColor, secondaryColor);
         this.id = id;
     }
 
-    public int[] getPrimaryRGB() {
-        return toRGB(primaryColor);
+    public String getPrimaryString() {
+        return colorToString(primary);
     }
 
-    public int[] getSecondaryRGB() {
-        return toRGB(secondaryColor);
+    public String getSecondaryString() {
+        return colorToString(secondary);
     }
 
-    private static boolean isBadColorString(String color) {
-        return (color.length() > 16) || !Pattern.compile(RGB_PATTERN).asPredicate().test(color);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Colors colors = (Colors) o;
+
+        return new EqualsBuilder()
+                .append(getPrimary(), colors.getPrimary())
+                .append(getSecondary(), colors.getSecondary())
+                .isEquals();
     }
 
-    private static int[] toRGB(String color) {
-        var aux = color.replace("rgb(", "");
-        aux = aux.replace(")", "");
-        var rgb = aux.split(",");
-        return new int[] { Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]) };
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(getPrimary())
+                .append(getSecondary())
+                .toHashCode();
+    }
+
+    private static boolean isInvalidColor(int[] color) {
+        return (color.length != 3)
+                || (Arrays.stream(color).min().orElse(0) < 0)
+                || (Arrays.stream(color).max().orElse(0) > 255);
+    }
+
+    private static String colorToString(int[] color) {
+        return String.format("rgb(%d,%d,%d)", color[0], color[1], color[2]);
     }
 }

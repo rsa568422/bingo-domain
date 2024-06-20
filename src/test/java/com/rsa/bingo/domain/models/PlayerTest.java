@@ -6,43 +6,49 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class PlayerTest {
 
     @Test
-    void gettersSetters_1() {
-        var player = Data.PLAYER();
+    void testEquals() {
+        var expected = Data.PLAYER();
 
         assertAll(
-                () -> assertNotNull(player.getId()),
-                () -> assertEquals(1, player.getId()),
-                () -> assertNotNull(player.getName()),
-                () -> assertEquals("Player", player.getName()),
-                () -> assertDoesNotThrow(() -> player.setId(null)),
-                () -> assertDoesNotThrow(() -> player.setName("Player 2")),
-                () -> assertNull(player.getId()),
-                () -> assertNotNull(player.getName()),
-                () -> assertEquals("Player 2", player.getName())
-
+                () -> assertEquals(expected, new Player(1, "Player")),
+                () -> assertNotEquals(expected, new Player(null, null)),
+                () -> assertNotEquals(expected, new Player(1, null)),
+                () -> assertNotEquals(expected, new Player(null, "Player")),
+                () -> assertNotEquals(expected, new Player(1, "Other Player")),
+                () -> assertNotEquals(expected, new Player(2, "Player"))
         );
     }
 
     @Test
-    void gettersSetters_2() {
-        var player = new Player();
+    void testHashCode() {
+        var expected = Data.PLAYER().hashCode();
 
         assertAll(
-                () -> assertNull(player.getId()),
-                () -> assertNull(player.getName()),
-                () -> assertDoesNotThrow(() -> player.setId(1)),
-                () -> assertDoesNotThrow(() -> player.setName("Player")),
-                () -> assertNotNull(player.getId()),
-                () -> assertEquals(1, player.getId()),
-                () -> assertNotNull(player.getName()),
-                () -> assertEquals("Player", player.getName())
+                () -> assertEquals(expected, new Player(1, "Player").hashCode()),
+                () -> assertNotEquals(expected, new Player(null, null).hashCode()),
+                () -> assertNotEquals(expected, new Player(1, null).hashCode()),
+                () -> assertNotEquals(expected, new Player(null, "Player").hashCode()),
+                () -> assertNotEquals(expected, new Player(1, "Other Player").hashCode()),
+                () -> assertNotEquals(expected, new Player(2, "Player").hashCode())
+        );
+    }
 
+    @Test
+    void getterSetter() {
+        var actual = new Player();
+
+        assertAll(
+                () -> assertNull(actual.getId()),
+                () -> assertNull(actual.getName()),
+                () -> assertDoesNotThrow(() -> actual.setId(1)),
+                () -> assertDoesNotThrow(() -> actual.setName("Player")),
+                () -> assertEquals(Data.PLAYER(), actual)
         );
     }
 }

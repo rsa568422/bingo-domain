@@ -6,8 +6,6 @@ import java.util.Optional;
 
 public interface CardRepository {
 
-    Iterable<Card> findAll();
-
     Optional<Card> findById(Integer id);
 
     Iterable<Card> findByPlayerId(Integer playerId);

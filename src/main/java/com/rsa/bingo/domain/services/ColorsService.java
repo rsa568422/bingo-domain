@@ -1,10 +1,10 @@
-package com.rsa.bingo.domain.repositories;
+package com.rsa.bingo.domain.services;
 
 import com.rsa.bingo.domain.models.Colors;
 
 import java.util.Optional;
 
-public interface ColorsRepository {
+public interface ColorsService {
 
     Iterable<Colors> findAll();
 

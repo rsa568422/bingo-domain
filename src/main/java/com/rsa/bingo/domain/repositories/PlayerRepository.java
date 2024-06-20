@@ -10,7 +10,7 @@ public interface PlayerRepository {
 
     Optional<Player> findById(Integer id);
 
-    Optional<Player> findByName(String name);
+    Iterable<Player> findByName(String name);
 
     Player save(Player player);
 

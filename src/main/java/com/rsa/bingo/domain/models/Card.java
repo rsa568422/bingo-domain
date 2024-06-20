@@ -2,6 +2,8 @@ package com.rsa.bingo.domain.models;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
@@ -55,6 +57,22 @@ public final class Card {
 
     public Optional<Integer> get(int x, int y) {
         return Optional.ofNullable(values[x][y]);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Card card = (Card) o;
+
+        return new EqualsBuilder().append(getValues(), card.getValues()).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(getValues()).toHashCode();
     }
 
     private static boolean badRow(Integer[] row) {

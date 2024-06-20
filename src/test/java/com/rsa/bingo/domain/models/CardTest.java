@@ -1,26 +1,33 @@
 package com.rsa.bingo.domain.models;
 
 import com.rsa.bingo.Data;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CardTest {
+
+
 
     @Test
     void card_ok() {
         assertAll(
                 () -> assertDoesNotThrow(Data::CARD),
-                () -> assertDoesNotThrow(() -> new Card(1, Data.VALUES()))
+                () -> assertDoesNotThrow(() -> new Card(1, Data.VALUES())),
+                () -> assertDoesNotThrow(() -> new Card(1, Data.VALUES(), Data.PLAYER()))
         );
     }
 
@@ -128,65 +135,89 @@ class CardTest {
     @Test
     void get() {
         var card = Data.CARD();
+        var empties = new LinkedList<>();
+        var values = new LinkedList<>();
+
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 9; j++) {
+                var value = card.get(i, j);
+                if (value.isPresent())
+                    values.add(Triple.of(i, j, value.get()));
+                else
+                    empties.add(Pair.of(i, j));
+            }
 
         assertAll(
+                () -> assertNotNull(card),
                 () -> assertArrayEquals(Data.VALUES(), card.getValues()),
-
-                () -> assertFalse(card.get(0, 0).isPresent()),
-                () -> assertTrue(card.get(0, 1).isPresent()),
-                () -> assertEquals(18, card.get(0, 1).orElse(null)),
-                () -> assertTrue(card.get(0, 2).isPresent()),
-                () -> assertEquals(24, card.get(0, 2).orElse(null)),
-                () -> assertFalse(card.get(0, 3).isPresent()),
-                () -> assertFalse(card.get(0, 4).isPresent()),
-                () -> assertTrue(card.get(0, 5).isPresent()),
-                () -> assertEquals(54, card.get(0, 5).orElse(null)),
-                () -> assertTrue(card.get(0, 6).isPresent()),
-                () -> assertEquals(67, card.get(0, 6).orElse(null)),
-                () -> assertFalse(card.get(0, 7).isPresent()),
-                () -> assertTrue(card.get(0, 8).isPresent()),
-                () -> assertEquals(80, card.get(0, 8).orElse(null)),
-
-                () -> assertFalse(card.get(1, 0).isPresent()),
-                () -> assertFalse(card.get(1, 1).isPresent()),
-                () -> assertTrue(card.get(1, 2).isPresent()),
-                () -> assertEquals(26, card.get(1, 2).orElse(null)),
-                () -> assertFalse(card.get(1, 3).isPresent()),
-                () -> assertTrue(card.get(1, 4).isPresent()),
-                () -> assertEquals(41, card.get(1, 4).orElse(null)),
-                () -> assertTrue(card.get(1, 5).isPresent()),
-                () -> assertEquals(55, card.get(1, 5).orElse(null)),
-                () -> assertFalse(card.get(1, 6).isPresent()),
-                () -> assertTrue(card.get(1, 7).isPresent()),
-                () -> assertEquals(70, card.get(1, 7).orElse(null)),
-                () -> assertTrue(card.get(1, 8).isPresent()),
-                () -> assertEquals(87, card.get(1, 8).orElse(null)),
-
-                () -> assertTrue(card.get(2, 0).isPresent()),
-                () -> assertEquals(4, card.get(2, 0).orElse(null)),
-                () -> assertFalse(card.get(2, 1).isPresent()),
-                () -> assertFalse(card.get(2, 2).isPresent()),
-                () -> assertTrue(card.get(2, 3).isPresent()),
-                () -> assertEquals(39, card.get(2, 3).orElse(null)),
-                () -> assertTrue(card.get(2, 4).isPresent()),
-                () -> assertEquals(42, card.get(2, 4).orElse(null)),
-                () -> assertFalse(card.get(2, 5).isPresent()),
-                () -> assertTrue(card.get(2, 6).isPresent()),
-                () -> assertEquals(69, card.get(2, 6).orElse(null)),
-                () -> assertTrue(card.get(2, 7).isPresent()),
-                () -> assertEquals(72, card.get(2, 7).orElse(null)),
-                () -> assertFalse(card.get(2, 8).isPresent())
+                () -> assertIterableEquals(empties, Data.EMPTIES()),
+                () -> assertIterableEquals(values, Data.CARD_VALUES())
         );
     }
 
     @Test
-    void getAndSetId() {
+    void testEquals() {
+        var values = Data.VALUES();
         var card = Data.CARD();
+        var cardWithId = new Card(1, values);
+        var cardWithOtherId = new Card(2, values);
+        var cardWithPlayer = new Card(1, values, Data.PLAYER());
+        var cardWithOtherPlayer = new Card(1, values, new Player(2, "Other Player"));
+        var cardWithOtherValues = new Card(Data.OTHER_VALUES());
+
+        assertAll(
+                () -> assertEquals(card, cardWithId),
+                () -> assertEquals(card, cardWithId),
+                () -> assertEquals(card, cardWithOtherId),
+                () -> assertEquals(card, cardWithPlayer),
+                () -> assertEquals(card, cardWithOtherPlayer),
+                () -> assertNotEquals(card, cardWithOtherValues),
+                () -> assertEquals(cardWithPlayer, card),
+                () -> assertEquals(cardWithPlayer, cardWithId),
+                () -> assertEquals(cardWithPlayer, cardWithOtherId),
+                () -> assertEquals(cardWithPlayer, cardWithOtherPlayer),
+                () -> assertNotEquals(cardWithPlayer, cardWithOtherValues)
+        );
+    }
+
+    @Test
+    void testHashCode() {
+        var values = Data.VALUES();
+        var card = Data.CARD().hashCode();
+        var cardWithId = new Card(1, values).hashCode();
+        var cardWithOtherId = new Card(2, values).hashCode();
+        var cardWithPlayer = new Card(1, values, Data.PLAYER()).hashCode();
+        var cardWithOtherPlayer = new Card(1, values, new Player(2, "Other Player")).hashCode();
+        var cardWithOtherValues = new Card(Data.OTHER_VALUES()).hashCode();
+
+        assertAll(
+                () -> assertEquals(card, cardWithId),
+                () -> assertEquals(card, cardWithId),
+                () -> assertEquals(card, cardWithOtherId),
+                () -> assertEquals(card, cardWithPlayer),
+                () -> assertEquals(card, cardWithOtherPlayer),
+                () -> assertNotEquals(card, cardWithOtherValues),
+                () -> assertEquals(cardWithPlayer, card),
+                () -> assertEquals(cardWithPlayer, cardWithId),
+                () -> assertEquals(cardWithPlayer, cardWithOtherId),
+                () -> assertEquals(cardWithPlayer, cardWithOtherPlayer),
+                () -> assertNotEquals(cardWithPlayer, cardWithOtherValues)
+        );
+    }
+
+    @Test
+    void getterSetter() {
+        var card = Data.CARD();
+        var player = Data.PLAYER();
 
         assertAll(
                 () -> assertNull(card.getId()),
+                () -> assertNull(card.getPlayer()),
+                () -> assertNotNull(card.getValues()),
                 () -> assertDoesNotThrow(() -> card.setId(1)),
-                () -> assertEquals(1, card.getId())
+                () -> assertEquals(1, card.getId()),
+                () -> assertDoesNotThrow(() -> card.setPlayer(player)),
+                () -> assertEquals(player, card.getPlayer())
         );
     }
 }

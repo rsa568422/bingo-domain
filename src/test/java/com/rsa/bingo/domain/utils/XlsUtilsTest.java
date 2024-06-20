@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class XlsUtilsTest {
 
-    private static final Colors COLORS = new Colors("rgb(255,0,0)", "rgb(255,128,0)");
+    private static final Colors COLORS = new Colors(new int[] {255, 0, 0}, new int[] {255, 128, 0});
 
     private HSSFWorkbook workbook;
 

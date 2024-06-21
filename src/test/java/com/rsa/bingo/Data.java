@@ -1,7 +1,7 @@
 package com.rsa.bingo;
 
 import com.rsa.bingo.domain.models.Card;
-import com.rsa.bingo.domain.models.Colors;
+import com.rsa.bingo.domain.models.Color;
 import com.rsa.bingo.domain.models.Customization;
 import com.rsa.bingo.domain.models.Player;
 import org.apache.commons.lang3.tuple.Pair;
@@ -31,8 +31,8 @@ public final class Data {
         return new Card(VALUES());
     }
 
-    public static Colors COLORS() {
-        return new Colors(new int[] {255, 0, 0}, new int[] {255, 128, 0});
+    public static Card CARD(Integer id, Player player) {
+        return new Card(id, VALUES(), player);
     }
 
     public static Player PLAYER() {
@@ -40,7 +40,11 @@ public final class Data {
     }
 
     public static Customization CUSTOMIZATION() {
-        return new Customization(CARD(), COLORS());
+        return new Customization(null, Color.BLACK, Color.GREY_50_PERCENT);
+    }
+
+    public static Customization CUSTOMIZATION(Integer id) {
+        return new Customization(id, Color.BLACK, Color.GREY_50_PERCENT);
     }
 
     public static List<Pair<Integer, Integer>> EMPTIES() {

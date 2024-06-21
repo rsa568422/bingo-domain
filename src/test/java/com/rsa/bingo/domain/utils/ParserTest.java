@@ -13,16 +13,27 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyDouble;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 class ParserTest {
 
     @Test
     void getBytes() throws IOException {
         var card = Data.CARD();
-        var colors = Data.COLORS();
+        var customization = Data.CUSTOMIZATION();
         var workbook = Mockito.mock(HSSFWorkbook.class);
+        var primary = customization.getPrimary().getName();
+        var secondary = customization.getSecondary().getName();
         var sheet = Mockito.mock(HSSFSheet.class);
         var primaryStyle = Mockito.mock(HSSFCellStyle.class);
         var secondaryStyle = Mockito.mock(HSSFCellStyle.class);
@@ -43,18 +54,18 @@ class ParserTest {
         try (MockedStatic<XlsUtils> mockedStatic = Mockito.mockStatic(XlsUtils.class)) {
             mockedStatic.when(XlsUtils::getWorkbook).thenReturn(workbook);
             mockedStatic.when(() -> XlsUtils.getSheet(workbook, "Bingo", 8, 50)).thenReturn(sheet);
-            mockedStatic.when(() -> XlsUtils.getPrimaryCellStyle(workbook, colors, 28)).thenReturn(primaryStyle);
-            mockedStatic.when(() -> XlsUtils.getSecondaryCellStyle(workbook, colors)).thenReturn(secondaryStyle);
+            mockedStatic.when(() -> XlsUtils.getPrimaryCellStyle(workbook, primary, 28)).thenReturn(primaryStyle);
+            mockedStatic.when(() -> XlsUtils.getSecondaryCellStyle(workbook, primary, secondary)).thenReturn(secondaryStyle);
 
-            actual = Parser.getBytes(card, colors);
+            actual = Parser.getBytes(card, customization);
 
             mockedStatic.verify(XlsUtils::getWorkbook, times(1));
             mockedStatic.verify(() -> XlsUtils.getSheet(any(), any(), anyInt(), anyInt()), times(1));
             mockedStatic.verify(() -> XlsUtils.getSheet(workbook, "Bingo", 8, 50), times(1));
             mockedStatic.verify(() -> XlsUtils.getPrimaryCellStyle(any(), any(), anyInt()), times(1));
-            mockedStatic.verify(() -> XlsUtils.getPrimaryCellStyle(workbook, colors, 28), times(1));
-            mockedStatic.verify(() -> XlsUtils.getSecondaryCellStyle(any(), any()), times(1));
-            mockedStatic.verify(() -> XlsUtils.getSecondaryCellStyle(workbook, colors), times(1));
+            mockedStatic.verify(() -> XlsUtils.getPrimaryCellStyle(workbook, primary, 28), times(1));
+            mockedStatic.verify(() -> XlsUtils.getSecondaryCellStyle(any(), any(), any()), times(1));
+            mockedStatic.verify(() -> XlsUtils.getSecondaryCellStyle(workbook, primary, secondary), times(1));
             mockedStatic.verifyNoMoreInteractions();
         }
 

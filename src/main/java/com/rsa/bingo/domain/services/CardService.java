@@ -1,16 +1,42 @@
 package com.rsa.bingo.domain.services;
 
 import com.rsa.bingo.domain.models.Card;
+import com.rsa.bingo.domain.models.Customization;
+import com.rsa.bingo.domain.repositories.CardRepository;
+import com.rsa.bingo.domain.repositories.CustomizationRepository;
+import com.rsa.bingo.domain.utils.Parser;
 
 import java.util.Optional;
 
-public interface CardService {
+public abstract class CardService {
 
-    Optional<Card> findById(Integer id);
+    private final CardRepository cardRepository;
 
-    Iterable<Card> findByPlayerId(Integer playerId);
+    private final CustomizationRepository customizationRepository;
 
-    Card save(Card card);
+    protected CardService(CardRepository cardRepository, CustomizationRepository customizationRepository) {
+        this.cardRepository = cardRepository;
+        this.customizationRepository = customizationRepository;
+    }
 
-    void delete(Integer id);
+    public Optional<Card> findById(Integer id) {
+        return cardRepository.findById(id);
+    }
+
+    public Iterable<Card> findByPlayerId(Integer playerId) {
+        return cardRepository.findByPlayerId(playerId);
+    }
+
+    public Card save(Card card) {
+        return cardRepository.save(card);
+    }
+
+    public void delete(Integer id) {
+        customizationRepository.delete(id);
+        cardRepository.delete(id);
+    }
+
+    public byte[] toBytes(Card card, Customization customization) {
+        return Parser.getBytes(card, customization);
+    }
 }

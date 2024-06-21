@@ -4,9 +4,11 @@ import com.rsa.bingo.domain.models.Customization;
 
 public interface CustomizationRepository {
 
+    Iterable<Customization> findByCardId(Integer cardId);
+
     Customization save(Customization customization);
 
     void delete(Integer cardId);
 
-    void delete(Integer cardId, Integer colorsId);
+    void delete(Customization customization);
 }

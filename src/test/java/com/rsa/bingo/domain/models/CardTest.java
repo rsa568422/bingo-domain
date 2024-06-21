@@ -20,14 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CardTest {
 
-
-
     @Test
     void card_ok() {
         assertAll(
-                () -> assertDoesNotThrow(Data::CARD),
-                () -> assertDoesNotThrow(() -> new Card(1, Data.VALUES())),
-                () -> assertDoesNotThrow(() -> new Card(1, Data.VALUES(), Data.PLAYER()))
+                () -> assertDoesNotThrow(() -> Data.CARD()),
+                () -> assertDoesNotThrow(() -> Data.CARD(1, null)),
+                () -> assertDoesNotThrow(() -> Data.CARD(1, Data.PLAYER()))
         );
     }
 
@@ -157,12 +155,11 @@ class CardTest {
 
     @Test
     void testEquals() {
-        var values = Data.VALUES();
         var card = Data.CARD();
-        var cardWithId = new Card(1, values);
-        var cardWithOtherId = new Card(2, values);
-        var cardWithPlayer = new Card(1, values, Data.PLAYER());
-        var cardWithOtherPlayer = new Card(1, values, new Player(2, "Other Player"));
+        var cardWithId = Data.CARD(1, null);
+        var cardWithOtherId = Data.CARD(2, null);
+        var cardWithPlayer = Data.CARD(1, Data.PLAYER());
+        var cardWithOtherPlayer = Data.CARD(1, new Player(2, "Other Player"));
         var cardWithOtherValues = new Card(Data.OTHER_VALUES());
 
         assertAll(
@@ -182,13 +179,12 @@ class CardTest {
 
     @Test
     void testHashCode() {
-        var values = Data.VALUES();
-        var card = Data.CARD().hashCode();
-        var cardWithId = new Card(1, values).hashCode();
-        var cardWithOtherId = new Card(2, values).hashCode();
-        var cardWithPlayer = new Card(1, values, Data.PLAYER()).hashCode();
-        var cardWithOtherPlayer = new Card(1, values, new Player(2, "Other Player")).hashCode();
-        var cardWithOtherValues = new Card(Data.OTHER_VALUES()).hashCode();
+        var card = Data.CARD();
+        var cardWithId = Data.CARD(1, null);
+        var cardWithOtherId = Data.CARD(2, null);
+        var cardWithPlayer = Data.CARD(1, Data.PLAYER());
+        var cardWithOtherPlayer = Data.CARD(1, new Player(2, "Other Player"));
+        var cardWithOtherValues = new Card(Data.OTHER_VALUES());
 
         assertAll(
                 () -> assertEquals(card, cardWithId),

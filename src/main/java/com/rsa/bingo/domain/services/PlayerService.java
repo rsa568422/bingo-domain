@@ -1,18 +1,49 @@
 package com.rsa.bingo.domain.services;
 
 import com.rsa.bingo.domain.models.Player;
+import com.rsa.bingo.domain.repositories.CardRepository;
+import com.rsa.bingo.domain.repositories.CustomizationRepository;
+import com.rsa.bingo.domain.repositories.PlayerRepository;
 
 import java.util.Optional;
 
-public interface PlayerService {
+public abstract class PlayerService {
 
-    Iterable<Player> findAll();
+    private final PlayerRepository playerRepository;
 
-    Optional<Player> findById(Integer id);
+    private final CardRepository cardRepository;
 
-    Iterable<Player> findByName(String name);
+    private final CustomizationRepository customizationRepository;
 
-    Player save(Player player);
+    protected PlayerService(PlayerRepository playerRepository,
+                            CardRepository cardRepository,
+                            CustomizationRepository customizationRepository) {
+        this.playerRepository = playerRepository;
+        this.cardRepository = cardRepository;
+        this.customizationRepository = customizationRepository;
+    }
 
-    void delete(Integer id);
+    public Iterable<Player> findAll() {
+        return playerRepository.findAll();
+    }
+
+    public Optional<Player> findById(Integer id) {
+        return playerRepository.findById(id);
+    }
+
+    public Iterable<Player> findByName(String name) {
+        return playerRepository.findByName(name);
+    }
+
+    public Player save(Player player) {
+        return playerRepository.save(player);
+    }
+
+    public void delete(Integer id) {
+        cardRepository.findByPlayerId(id).forEach(card -> {
+            customizationRepository.delete(card.getId());
+            cardRepository.delete(card.getId());
+        });
+        playerRepository.delete(id);
+    }
 }

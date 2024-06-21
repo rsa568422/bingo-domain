@@ -1,6 +1,6 @@
 package com.rsa.bingo.domain.utils;
 
-import com.rsa.bingo.domain.models.Colors;
+import com.rsa.bingo.domain.models.Color;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class XlsUtilsTest {
-
-    private static final Colors COLORS = new Colors(new int[] {255, 0, 0}, new int[] {255, 128, 0});
 
     private HSSFWorkbook workbook;
 
@@ -51,7 +49,7 @@ class XlsUtilsTest {
 
     @Test
     void getPrimaryCellStyle() {
-        var actual = XlsUtils.getPrimaryCellStyle(workbook, COLORS, 28);
+        var actual = XlsUtils.getPrimaryCellStyle(workbook, Color.GREY_50_PERCENT.getName(), 28);
 
         assertAll(
                 () -> assertNotNull(actual),
@@ -63,15 +61,15 @@ class XlsUtilsTest {
                         () -> assertEquals(BorderStyle.MEDIUM, actual.getBorderTop()),
                         () -> assertEquals(BorderStyle.MEDIUM, actual.getBorderRight()),
                         () -> assertEquals(BorderStyle.MEDIUM, actual.getBorderBottom()),
-                        () -> assertEquals(10, actual.getLeftBorderColor()),
-                        () -> assertEquals(10, actual.getTopBorderColor()),
-                        () -> assertEquals(10, actual.getRightBorderColor()),
-                        () -> assertEquals(10, actual.getBottomBorderColor())
+                        () -> assertEquals(23, actual.getLeftBorderColor()),
+                        () -> assertEquals(23, actual.getTopBorderColor()),
+                        () -> assertEquals(23, actual.getRightBorderColor()),
+                        () -> assertEquals(23, actual.getBottomBorderColor())
                 ),
                 () -> {
                     var font = actual.getFont(workbook);
                     assertNotNull(font);
-                    assertEquals(10, font.getColor());
+                    assertEquals(23, font.getColor());
                     assertEquals(28, font.getFontHeightInPoints());
                 },
                 () -> assertEquals(IndexedColors.WHITE.index, actual.getFillForegroundColor()),
@@ -82,7 +80,7 @@ class XlsUtilsTest {
 
     @Test
     void getSecondaryCellStyle() {
-        var actual = XlsUtils.getSecondaryCellStyle(workbook, COLORS);
+        var actual = XlsUtils.getSecondaryCellStyle(workbook, "RED", Color.GREY_50_PERCENT.getName());
 
         assertAll(
                 () -> assertNotNull(actual),
@@ -99,7 +97,7 @@ class XlsUtilsTest {
                         () -> assertEquals(10, actual.getRightBorderColor()),
                         () -> assertEquals(10, actual.getBottomBorderColor())
                 ),
-                () -> assertEquals(52, actual.getFillForegroundColor())
+                () -> assertEquals(23, actual.getFillForegroundColor())
         );
     }
 }

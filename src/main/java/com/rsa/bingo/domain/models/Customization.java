@@ -1,19 +1,27 @@
 package com.rsa.bingo.domain.models;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor
 public final class Customization {
 
-    private Card card;
+    @Setter
+    private Integer cardId;
 
-    private Colors colors;
+    private final Color primary;
+
+    private final Color secondary;
+
+    public Customization(Color primary, Color secondary) {
+        this.primary = primary;
+        this.secondary = secondary;
+    }
+
+    public Customization(Integer cardId, Color primary, Color secondary) {
+        this(primary, secondary);
+        this.cardId = cardId;
+    }
 }

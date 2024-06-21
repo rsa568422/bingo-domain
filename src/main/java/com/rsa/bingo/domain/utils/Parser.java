@@ -1,7 +1,7 @@
 package com.rsa.bingo.domain.utils;
 
 import com.rsa.bingo.domain.models.Card;
-import com.rsa.bingo.domain.models.Colors;
+import com.rsa.bingo.domain.models.Customization;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 
@@ -9,11 +9,15 @@ public final class Parser {
 
     private Parser() { }
 
-    public static byte[] getBytes(Card card, Colors colors) {
+    public static byte[] getBytes(Card card, Customization customization) {
         var workbook = XlsUtils.getWorkbook();
         var sheet = XlsUtils.getSheet(workbook, "Bingo", 8, 50);
-        var primaryCellStyle = XlsUtils.getPrimaryCellStyle(workbook, colors, 28);
-        var secondaryCellStyle = XlsUtils.getSecondaryCellStyle(workbook, colors);
+        var primaryCellStyle = XlsUtils.getPrimaryCellStyle(workbook, customization.getPrimary().getName(), 28);
+        var secondaryCellStyle = XlsUtils.getSecondaryCellStyle(
+                workbook,
+                customization.getPrimary().getName(),
+                customization.getSecondary().getName()
+        );
         fillSheet(card, sheet, primaryCellStyle, secondaryCellStyle);
         return workbook.getBytes();
     }

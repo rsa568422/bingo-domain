@@ -1,6 +1,5 @@
 package com.rsa.bingo.domain.utils;
 
-import com.rsa.bingo.domain.models.Colors;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -26,24 +25,7 @@ final class XlsUtils {
         return sheet;
     }
 
-    static HSSFCellStyle getPrimaryCellStyle(HSSFWorkbook workbook, Colors colors, int height) {
-        return getPrimaryCellStyle(workbook, getColor(workbook, colors.getPrimary()), height);
-    }
-
-    static HSSFCellStyle getSecondaryCellStyle(HSSFWorkbook workbook, Colors colors) {
-        return getSecondaryCellStyle(
-                workbook,
-                getColor(workbook, colors.getPrimary()),
-                getColor(workbook, colors.getSecondary())
-        );
-    }
-
-    private static short getColor(HSSFWorkbook workbook, int[] rgb) {
-        var palette = workbook.getCustomPalette();
-        return palette.findSimilarColor(rgb[0], rgb[1], rgb[2]).getIndex();
-    }
-
-    private static HSSFCellStyle getPrimaryCellStyle(HSSFWorkbook workbook, short primaryColor, int height) {
+    static HSSFCellStyle getPrimaryCellStyle(HSSFWorkbook workbook, String primaryColor, int height) {
         var font = getFont(workbook, primaryColor, height);
         var cellStyle = workbook.createCellStyle();
         setDefaultStyle(cellStyle, primaryColor);
@@ -54,29 +36,29 @@ final class XlsUtils {
         return cellStyle;
     }
 
-    private static HSSFCellStyle getSecondaryCellStyle(HSSFWorkbook workbook, short primaryColor, short secondaryColor) {
+    static HSSFCellStyle getSecondaryCellStyle(HSSFWorkbook workbook, String primaryColor, String secondaryColor) {
         var cellStyle = workbook.createCellStyle();
         setDefaultStyle(cellStyle, primaryColor);
-        cellStyle.setFillForegroundColor(secondaryColor);
+        cellStyle.setFillForegroundColor(IndexedColors.valueOf(secondaryColor).index);
         return cellStyle;
     }
 
-    private static HSSFFont getFont(HSSFWorkbook workbook, short color, int height) {
+    private static HSSFFont getFont(HSSFWorkbook workbook, String color, int height) {
         var font = workbook.createFont();
-        font.setColor(color);
+        font.setColor(IndexedColors.valueOf(color).index);
         font.setFontHeightInPoints((short) height);
         return font;
     }
 
-    private static void setDefaultStyle(HSSFCellStyle cellStyle, short color) {
+    private static void setDefaultStyle(HSSFCellStyle cellStyle, String color) {
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         cellStyle.setBorderLeft(BorderStyle.MEDIUM);
         cellStyle.setBorderTop(BorderStyle.MEDIUM);
         cellStyle.setBorderRight(BorderStyle.MEDIUM);
         cellStyle.setBorderBottom(BorderStyle.MEDIUM);
-        cellStyle.setLeftBorderColor(color);
-        cellStyle.setTopBorderColor(color);
-        cellStyle.setRightBorderColor(color);
-        cellStyle.setBottomBorderColor(color);
+        cellStyle.setLeftBorderColor(IndexedColors.valueOf(color).index);
+        cellStyle.setTopBorderColor(IndexedColors.valueOf(color).index);
+        cellStyle.setRightBorderColor(IndexedColors.valueOf(color).index);
+        cellStyle.setBottomBorderColor(IndexedColors.valueOf(color).index);
     }
 }

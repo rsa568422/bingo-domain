@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 class CustomizationServiceTest {
 
     @InjectMocks
-    private TestCustomizationService service;
+    private CustomizationService service;
 
     @Mock
     private CustomizationRepository customizationRepository;
@@ -88,11 +88,5 @@ class CustomizationServiceTest {
         verify(customizationRepository, times(1)).delete(any(Customization.class));
         verify(customizationRepository, times(1)).delete(customization);
         verifyNoMoreInteractions(customizationRepository);
-    }
-
-    static class TestCustomizationService extends CustomizationService {
-        protected TestCustomizationService(CustomizationRepository customizationRepository) {
-            super(customizationRepository);
-        }
     }
 }

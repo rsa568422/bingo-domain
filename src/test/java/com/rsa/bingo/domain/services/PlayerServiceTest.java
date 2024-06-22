@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 class PlayerServiceTest {
 
     @InjectMocks
-    private TestPlayerService service;
+    private PlayerService service;
 
     @Mock
     private PlayerRepository playerRepository;
@@ -133,13 +133,5 @@ class PlayerServiceTest {
         verify(customizationRepository, times(1)).delete(anyInt());
         verify(customizationRepository, times(1)).delete(1);
         verifyNoMoreInteractions(playerRepository, cardRepository, customizationRepository);
-    }
-
-    static class TestPlayerService extends PlayerService {
-        protected TestPlayerService(PlayerRepository playerRepository,
-                                    CardRepository cardRepository,
-                                    CustomizationRepository customizationRepository) {
-            super(playerRepository, cardRepository, customizationRepository);
-        }
     }
 }

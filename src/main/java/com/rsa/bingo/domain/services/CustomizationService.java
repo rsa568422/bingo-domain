@@ -3,11 +3,11 @@ package com.rsa.bingo.domain.services;
 import com.rsa.bingo.domain.models.Customization;
 import com.rsa.bingo.domain.repositories.CustomizationRepository;
 
-public abstract class CustomizationService {
+public final class CustomizationService {
 
     private final CustomizationRepository customizationRepository;
 
-    protected CustomizationService(CustomizationRepository customizationRepository) {
+    public CustomizationService(CustomizationRepository customizationRepository) {
         this.customizationRepository = customizationRepository;
     }
 

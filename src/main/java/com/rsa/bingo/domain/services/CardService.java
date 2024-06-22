@@ -8,13 +8,13 @@ import com.rsa.bingo.domain.utils.Parser;
 
 import java.util.Optional;
 
-public abstract class CardService {
+public final class CardService {
 
     private final CardRepository cardRepository;
 
     private final CustomizationRepository customizationRepository;
 
-    protected CardService(CardRepository cardRepository, CustomizationRepository customizationRepository) {
+    public CardService(CardRepository cardRepository, CustomizationRepository customizationRepository) {
         this.cardRepository = cardRepository;
         this.customizationRepository = customizationRepository;
     }

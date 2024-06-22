@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 class CardServiceTest {
 
     @InjectMocks
-    private TestCardService service;
+    private CardService service;
 
     @Mock
     private CardRepository cardRepository;
@@ -132,11 +132,5 @@ class CardServiceTest {
         );
 
         verifyNoMoreInteractions(cardRepository, customizationRepository);
-    }
-
-    static class TestCardService extends CardService {
-        protected TestCardService(CardRepository cardRepository, CustomizationRepository customizationRepository) {
-            super(cardRepository, customizationRepository);
-        }
     }
 }

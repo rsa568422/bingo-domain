@@ -7,7 +7,7 @@ import com.rsa.bingo.domain.repositories.PlayerRepository;
 
 import java.util.Optional;
 
-public abstract class PlayerService {
+public final class PlayerService {
 
     private final PlayerRepository playerRepository;
 
@@ -15,7 +15,7 @@ public abstract class PlayerService {
 
     private final CustomizationRepository customizationRepository;
 
-    protected PlayerService(PlayerRepository playerRepository,
+    public PlayerService(PlayerRepository playerRepository,
                             CardRepository cardRepository,
                             CustomizationRepository customizationRepository) {
         this.playerRepository = playerRepository;
